@@ -22,7 +22,7 @@ class City(BaseModel, Base):
         backref='cities'
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else None
 
- @property
+    @property
     def cities(self):
         """Getter attribute cities that returns the list of City objects
         linked to the current State"""
