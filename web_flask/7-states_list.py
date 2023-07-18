@@ -1,24 +1,26 @@
 #!/usr/bin/python3
 """
-Write a sctript that starts flask web app 
+Write a script that starts a Flask web app
 """
+
 from flask import Flask, render_template
-from flask import stort storage 
+from models import storage
+from models.state import State
 
 app = Flask(__name__)
 
 
 @app.teardown_appcontext
-def teardown_appcontext(exception)
-    """tear down session"""
-    storage.close
+def teardown_appcontext(exception):
+    """Tear down session"""
+    storage.close()
 
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """list states"""
-    states = storage.all("States")
-    return render_template('7-states_list.html', states=states.value()))
+    """List states"""
+    states = storage.all(State)
+    return render_template('7-states_list.html', states=states.values())
 
 
 if __name__ == '__main__':
