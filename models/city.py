@@ -21,3 +21,15 @@ class City(BaseModel, Base):
         cascade='all, delete, delete-orphan',
         backref='cities'
     ) if os.getenv('HBNB_TYPE_STORAGE') == 'db' else None
+
+ @property
+    def cities(self):
+        """Getter attribute cities that returns the list of City objects
+        linked to the current State"""
+        from models import storage
+        from models.state import State
+
+        state = storage.get(State, self.state_id)
+        if state is None:
+            return []
+        return state.cities
