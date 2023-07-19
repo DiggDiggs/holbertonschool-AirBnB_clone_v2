@@ -9,20 +9,20 @@ from models.state import State
 app = Flask(__name__)
 
 
-@app.route('./states', strict_slashes=False)
+@app.route('/states', strict_slashes=False)
 def states():
-    """ function that displays a HTML page with states """
+    """ function that displays an HTML page with states """
     states = storage.all(State)
     return render_template('9-states.html', states=states, mode='all')
 
 
 @app.route('/states/<id>', strict_slashes=False)
 def state_by_id(id):
-    """ function that displays a HTML page with citys of a state """
+    """ function that displays an HTML page with cities of a state """
     for state in storage.all(State).values():
         if state.id == id:
             return render_template('9-states.html', states=state, mode='id')
-        return render_template('9-states.html', states=state, mode='none')
+    return render_template('9-states.html', states=None, mode='none')
 
 
 @app.teardown_appcontext
