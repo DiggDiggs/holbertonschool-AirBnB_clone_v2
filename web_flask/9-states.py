@@ -8,20 +8,20 @@ app = Flask(__name__)
 
 @app.teardown_appcontext
 def teardown_appcontext(exception):
-    """Tears down session"""
+    """tears down session"""
     storage.close()
 
 
 @app.route('/states_list', strict_slashes=False)
 def states_list():
-    """Displays list of states"""
+    """displays list of states"""
     states = storage.all("State")
     return render_template('7-states_list.html', states=states.values())
 
 
 @app.route('/states/<id>', strict_slashes=False)
 def states_id(id):
-    """Displays state with id"""
+    """displays state with id"""
     state = storage.get(State, id)
     if state:
         cities = sorted(state.cities, key=lambda city: city.name)
