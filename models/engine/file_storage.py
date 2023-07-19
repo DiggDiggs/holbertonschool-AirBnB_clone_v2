@@ -1,34 +1,41 @@
 #!/usr/bin/python3
-"""This module defines a class to manage file storage for hbnb clone"""
+"""defines a class to manage file storage for hbnb clone"""
 import json
-from os import getenv
+from models import city, place, review, state, amenity, user, base_model
 
 
 class FileStorage:
     """This class manages storage of hbnb models in JSON format"""
     __file_path = 'file.json'
     __objects = {}
+    CDIC = {
+        'City': city.City,
+        'Place': place.Place,
+        'Review': review.Review,
+        'State': state.State,
+        'Amenity': amenity.Amenity,
+        'User': user.User
+    }
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
-        if cls is None:
-            return FileStorage.__objects
-        else:
-            classDict = {}
-            for val in FileStorage.__objects.values():
-                if type(val) == cls:
-                    classDict.update({val.to_dict()['__class__'] +
-                                      '.' + val.id: val})
-            return classDict
+        """returns dict of models in storage
+        if cls specified returns that class"""
+        if cls is not None:
+            if cls in self.CDIC.keys():
+                cls = self.CDIC.get(cls)
+            spec_rich = {}
+            for ky, vl in self.__objects.items():
+                if cls == type(vl):
+                    spec_rich[ky] = vl
+            return spec_rich
+        return self.__objects
 
     def new(self, obj):
-        """Adds new object to storage dictionary"""
-        if obj.__dict__.get('_sa_instance_state'):
-            del obj.__dict__['_sa_instance_state']
+        """adds new object to storage dict"""
         self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
-        """Saves storage dictionary to file"""
+        """saves storage dict to file"""
         with open(FileStorage.__file_path, 'w') as f:
             temp = {}
             temp.update(FileStorage.__objects)
@@ -37,7 +44,7 @@ class FileStorage:
             json.dump(temp, f)
 
     def reload(self):
-        """Loads storage dictionary from file"""
+        """loads storage dict from file"""
         from models.base_model import BaseModel
         from models.user import User
         from models.place import Place
@@ -61,13 +68,12 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """Deletes obj from __objects"""
-        if obj is None:
+        """if obj deletes obj from __objects"""
+        try:
+            key = obj.__class__.__name__ + "." + obj.id
+            del self.__objects[key]
+        except (AttributeError, KeyError):
             pass
-        for key, val in dict(FileStorage.__objects).items():
-            if val == obj:
-                del FileStorage.__objects[key]
 
     def close(self):
-        """Calls reload"""
         self.reload()
