@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Write a script that starts a Flask web app
+This script starts a Flask web app that lists states
 """
 
 from flask import Flask, render_template
