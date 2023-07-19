@@ -20,7 +20,7 @@ def states_list():
 
 
 @app.route('/states/<id>', strict_slashes=False)
-def states_id():
+def states_id(id):
     """displays state with id"""
     state = storage.get(State, id)
     if state:
